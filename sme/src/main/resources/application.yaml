@@ -3,9 +3,9 @@ spring:
     name: sme
 
   datasource:
-    url: jdbc:postgresql://pg-23b34967-sihlentshangase06-6d21.b.aivencloud.com:12667/smetech?sslmode=require
-    username: {DB_NAME}
-    password: {DB_PASSWORD}
+    url: jdbc:postgresql://learnwiselydb.postgres.database.azure.com:5432/sme_operations_db?sslmode=require
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
@@ -20,12 +20,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: {APP_EMAIL}
-    password: {APP_PASSWORD}
+    username: ${APP_EMAIL}
+    password: ${APP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -46,8 +47,11 @@ spring:
       queue-capacity: 100
 
 app:
-  base-url: http://localhost:8080
-  domain: localhost:8080
+  base-url: ${APP_BASE_URL}
+  domain: ${APP_DOMAIN}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
   jwt:
     secret: ${JWT_SECRET}
@@ -71,38 +75,12 @@ app:
   bcrypt:
     strength: 12
 
----
-spring:
-  config:
-    activate:
-      on-profile: test
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    try-it-out-enabled: true
 
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-
-  mail:
-    host: localhost
-    port: 3025
-    username: test
-    password: test
-    properties:
-      mail:
-        smtp:
-          auth: false
-          starttls:
-            enable: false
-
-app:
-  slug:
-    reserved-keywords: admin,api,app,auth,store
