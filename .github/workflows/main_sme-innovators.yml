@@ -1,12 +1,13 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - sme-innovators
+name: Build and deploy JAR app to Azure Web App - sme-tech
 
 on:
   push:
     branches:
       - main
+      - feature/*
   workflow_dispatch:
 
 jobs:
@@ -25,13 +26,14 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+        working-directory: sme
+        run: mvn -B clean package -DskipTests
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: sme/target/*.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,7 +59,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'sme-innovators'
+          app-name: 'sme-tech'
           slot-name: 'Production'
           package: '*.jar'
-          
+          startup-command: 'java -jar /home/site/wwwroot/*.jar'
