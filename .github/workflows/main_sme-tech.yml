@@ -7,12 +7,11 @@ on:
   push:
     branches:
       - main
-      - feature/*
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -26,22 +25,21 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        working-directory: sme
-        run: mvn -B clean package -DskipTests
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: sme/target/*.jar
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
-  
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -51,9 +49,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_74BA8326874E4AAEB5C1C568625BFDE2 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_1D1A5C127FE643D99D1A712A61EADF0B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9756F537A33E4B6080F63794A07FBA7B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2A69ADBDBB74498B85AEF5BB1A264354 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_53A77D67D22C424587E8E30D0FD24298 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1E5E31074DFA42E49CFFA7F12F6722E4 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -62,4 +60,4 @@ jobs:
           app-name: 'sme-tech'
           slot-name: 'Production'
           package: '*.jar'
-          startup-command: 'java -jar /home/site/wwwroot/*.jar'
+          
