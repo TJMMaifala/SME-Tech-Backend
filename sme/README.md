@@ -183,6 +183,16 @@ All endpoints are versioned under `/api/v1/`.
 Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)  
 OpenAPI spec: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 
+### Server Environments
+
+The Swagger UI exposes a server selector with the following environments:
+
+| Environment | URL |
+|-------------|-----|
+| Local Development | `http://localhost:8080` |
+| Production | `https://sme-operations-dza7e5czhdggexfh.canadacentral-01.azurewebsites.net` |
+| QA | `https://sme-tech-brdyghahdgcab3a2.brazilsouth-01.azurewebsites.net` |
+
 ---
 
 ## Testing
